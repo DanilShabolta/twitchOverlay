@@ -18,7 +18,15 @@ A modern, lightweight, frameless, and transparent Twitch chat overlay for stream
 
 ## Installation & Setup
 
-Before running, make sure you have [Node.js](https://nodejs.org/) installed.
+### 🟢 Easy way (for non-technical users)
+
+1. Install [Node.js](https://nodejs.org/) (LTS version).
+2. Download the project as a ZIP → **Code → Download ZIP**, extract it anywhere.
+3. Double-click **`install.bat`** — it will create a **Twoverlay shortcut on your Desktop**.
+4. From now on, just double-click the **Desktop shortcut** to launch the overlay.
+   > On first launch it will automatically install all dependencies — just wait ~1 minute.
+
+### 🔧 Manual way (for developers)
 
 1. **Clone the repository**:
    ```bash
@@ -69,7 +77,15 @@ Before running, make sure you have [Node.js](https://nodejs.org/) installed.
 
 ## Установка и запуск
 
-Перед запуском убедитесь, что на компьютере установлен [Node.js](https://nodejs.org/).
+### 🟢 Простой способ (для обычных пользователей)
+
+1. Установите [Node.js](https://nodejs.org/) (версия LTS).
+2. Скачайте проект архивом: **Code → Download ZIP**, распакуйте в любую папку.
+3. Дважды кликните **`install.bat`** — он создаст **ярлык на рабочем столе**.
+4. Теперь запускайте оверлей двойным кликом по **ярлыку на рабочем столе**.
+   > При первом запуске автоматически установятся все зависимости — подождите ~1 минуту.
+
+### 🔧 Способ для разработчиков
 
 1. **Склонируйте репозиторий**:
    ```bash
