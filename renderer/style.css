@@ -1,0 +1,396 @@
+/* Design Tokens and Variables */
+:root {
+  --twitch-purple: #9146ff;
+  --twitch-purple-hover: #772ce8;
+  --twitch-purple-active: #5c16c5;
+  --dark-bg: #18181b;
+  --panel-bg: #0e0e10;
+  --text-main: #efeff1;
+  --text-muted: #adadb8;
+  --border-color: #2f2f35;
+  --danger-color: #eb0400;
+  --danger-hover: #c20300;
+  --bg-opacity: 0.2; /* Dynamic opacity set by app.js */
+  --font-size: 16px; /* Dynamic size set by app.js */
+}
+
+/* Reset and Core Styles */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* App Container */
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: background-color 0.25s ease, border 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+}
+
+/* App Locked vs Unlocked States */
+#app.locked {
+  background-color: rgba(0, 0, 0, var(--bg-opacity));
+  border: 2px solid transparent;
+  box-shadow: none;
+}
+
+#app.unlocked {
+  background-color: rgba(14, 14, 16, 0.95);
+  border: 2px solid var(--twitch-purple);
+  box-shadow: 0 0 25px rgba(145, 70, 255, 0.4);
+}
+
+/* Drag Header (Unlocked only) */
+#drag-header {
+  display: none;
+  height: 38px;
+  background-color: var(--dark-bg);
+  border-bottom: 1px solid var(--border-color);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  -webkit-app-region: drag;
+  user-select: none;
+  cursor: move;
+  z-index: 100;
+}
+
+#app.unlocked #drag-header {
+  display: flex;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--twitch-purple);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--twitch-purple);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 8px var(--twitch-purple); }
+  100% { transform: scale(0.9); opacity: 0.6; }
+}
+
+.drag-instruction {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Chat Container */
+#chat-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Pin scroll to bottom */
+  transition: filter 0.2s ease;
+}
+
+#app.unlocked #chat-container {
+  /* Blur background chat slightly when editing */
+  filter: blur(1px) brightness(0.6);
+}
+
+/* Hide scrollbar when locked, custom scrollbar when unlocked */
+#chat-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+#app.locked #chat-container::-webkit-scrollbar {
+  width: 0;
+}
+
+#chat-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#chat-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+#chat-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Message List */
+#messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Chat Message Card */
+.chat-message {
+  font-size: var(--font-size);
+  line-height: 1.45;
+  word-wrap: break-word;
+  word-break: break-word;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), 0 0 1px rgba(0, 0, 0, 0.9); /* High readability */
+  animation: slideIn 0.2s ease-out forwards;
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+
+.chat-message.faded {
+  opacity: 0.15; /* Subtly visible when faded, or 0 to hide completely */
+  pointer-events: none;
+}
+
+#app.unlocked .chat-message.faded {
+  opacity: 1; /* Restore opacity when configuring */
+}
+
+@keyframes slideIn {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* System Message Style */
+.system-message {
+  background: rgba(145, 70, 255, 0.15);
+  border-left: 4px solid var(--twitch-purple);
+  padding: 12px;
+  border-radius: 0 6px 6px 0;
+  font-size: 13px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.system-title {
+  font-weight: 700;
+  color: var(--twitch-purple);
+  margin-bottom: 4px;
+}
+
+.system-body {
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.hotkey-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+/* Username and Text formatting */
+.chat-username {
+  font-weight: 700;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.chat-text {
+  color: var(--text-main);
+}
+
+.chat-emote {
+  vertical-align: middle;
+  max-height: 28px;
+  margin: -5px 2px;
+}
+
+/* Settings Panel (Unlocked only) */
+#settings-panel {
+  display: none;
+  background-color: var(--panel-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 18px;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 100;
+  max-height: 65%;
+  overflow-y: auto;
+}
+
+#app.unlocked #settings-panel {
+  display: flex;
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.settings-title {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settings-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Inputs & Buttons */
+.input-row {
+  display: flex;
+  gap: 8px;
+}
+
+input[type="text"] {
+  flex: 1;
+  background-color: var(--dark-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--twitch-purple);
+  box-shadow: 0 0 0 2px rgba(145, 70, 255, 0.25);
+}
+
+/* Connection Status indicator */
+#connection-status {
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.status-connected { color: #00f593; }
+.status-connecting { color: #ffb700; }
+.status-disconnected { color: var(--text-muted); }
+
+/* Range sliders */
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--border-color);
+  border-radius: 3px;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--twitch-purple);
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.1s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: var(--twitch-purple-hover);
+}
+
+.help-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Buttons style */
+button {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  background-color: var(--twitch-purple);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background-color: var(--twitch-purple-hover);
+}
+
+button:active {
+  background-color: var(--twitch-purple-active);
+  transform: scale(0.98);
+}
+
+.settings-footer {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.primary-btn {
+  flex: 2;
+  background-color: var(--twitch-purple);
+}
+
+.danger-btn {
+  flex: 1;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+.danger-btn:hover {
+  background-color: var(--danger-color);
+  color: white;
+  border-color: var(--danger-color);
+}
+
+/* Custom styles for Hotkey input read-only field */
+#hotkey-input {
+  cursor: pointer;
+  background-color: var(--dark-bg);
+  text-align: center;
+  font-family: monospace;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+#hotkey-input:focus {
+  border-color: var(--twitch-purple);
+  box-shadow: 0 0 8px rgba(145, 70, 255, 0.4);
+}

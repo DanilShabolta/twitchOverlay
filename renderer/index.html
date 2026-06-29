@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twitch Chat Overlay</title>
+  <!-- Google Fonts for premium look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Overlay Wrapper (toggled between locked/unlocked via classes) -->
+  <div id="app" class="locked">
+    
+    <!-- Drag Handle / Header (Only active and visible when unlocked) -->
+    <header id="drag-header">
+      <div class="status-indicator">
+        <span class="pulse-dot"></span>
+        <span class="status-text">Edit Mode (Unlocked)</span>
+      </div>
+      <div class="drag-instruction">Drag here to move / Drag edges to resize</div>
+    </header>
+
+    <!-- Chat Messages View -->
+    <main id="chat-container">
+      <div id="messages-list">
+        <!-- Messages will be appended here dynamically -->
+        <div class="system-message">
+          <div class="system-title">Welcome to Twoverlay</div>
+          <div class="system-body">Press <span class="hotkey-badge" id="current-hotkey-hint">Ctrl+Shift+Y</span> to toggle Edit Mode, customize chat, and move the window.</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Settings Panel (Only visible when unlocked) -->
+    <section id="settings-panel">
+      <h2 class="settings-title">Overlay Settings</h2>
+      
+      <div class="settings-group">
+        <label for="channel-input">Twitch Channel</label>
+        <div class="input-row">
+          <input type="text" id="channel-input" placeholder="e.g. streamer_name" autocomplete="off" spellcheck="false">
+          <button id="connect-btn">Connect</button>
+        </div>
+        <div id="connection-status" class="status-disconnected">Disconnected</div>
+      </div>
+
+      <div class="settings-group">
+        <label for="opacity-input">Background Opacity (<span id="opacity-val">20</span>%)</label>
+        <input type="range" id="opacity-input" min="0" max="100" value="20" class="slider">
+      </div>
+
+      <div class="settings-group">
+        <label for="font-size-input">Font Size (<span id="font-size-val">16</span>px)</label>
+        <input type="range" id="font-size-input" min="12" max="32" value="16" class="slider">
+      </div>
+
+      <div class="settings-group">
+        <label for="fade-time-input">Message Fade Out (<span id="fade-time-val">15</span>s)</label>
+        <input type="range" id="fade-time-input" min="0" max="120" step="5" value="15" class="slider">
+        <span class="help-text">Set to 0 to keep messages forever.</span>
+      </div>
+
+      <div class="settings-group">
+        <label for="hotkey-input">Global Hotkey</label>
+        <input type="text" id="hotkey-input" placeholder="Press key combination..." readonly>
+        <span class="help-text">Click field and press shortcut to change it (e.g. Ctrl+Shift+X).</span>
+      </div>
+
+      <div class="settings-footer">
+        <button id="save-btn" class="primary-btn">Save & Lock</button>
+        <button id="exit-btn" class="danger-btn">Exit App</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
